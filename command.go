@@ -13,6 +13,8 @@ type command struct {
 	description string
 }
 
-// Args is a map passed to command functions. This is simply an alias to
-// ArgMap from github.com/mgutz/minimist.
-type Args minimist.ArgMap
+// Args is a struct passed to all command functions. It has the
+// ArgMap from minimist embedded.
+type Args struct {
+	minimist.ArgMap
+}

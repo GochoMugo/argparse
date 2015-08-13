@@ -15,7 +15,7 @@ func main() {
 	}).Command("x", "stop", "stop application", func(a argparse.Args) {
 		fmt.Println("application stopped")
 	}).Command("f", "flags", "process flags", func(a argparse.Args) {
-		for key, value := range a {
+		for key, value := range a.ArgMap {
 			fmt.Println(key, value)
 		}
 	})

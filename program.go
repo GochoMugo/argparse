@@ -97,7 +97,7 @@ func (prog *Program) Parse() *Program {
 	}
 
 	args := minimist.ParseArgv(os.Args[2:])
-	cmd.handler(Args(args))
+	cmd.handler(Args{args})
 
 	return prog
 }
