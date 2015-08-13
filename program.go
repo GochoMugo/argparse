@@ -70,23 +70,30 @@ func (prog *Program) Epilog(epilog string) *Program {
 
 // Parse does the argument parsing
 func (prog *Program) Parse() *Program {
-	commandName := os.Args[0]
+	if len(os.Args) == 1 {
+		prog.ShowHelp()
+		return prog
+	}
+
+	var commandName = os.Args[1]
 	var command Command
-	var found bool
+	var found = false
 
 	for _, v := range prog.commands {
 		if v.short == commandName || v.long == commandName {
 			command = v
+			found = true
 			break
 		}
 	}
 
 	if found == false {
-		println(`INVALID OPTION: {{ commandName }}\nTry \"help\" for a list of available commands`)
+		fmt.Println("INVALID OPTION: " + commandName)
+		fmt.Println("Try \"help\" for a list of available commands")
 		return prog
 	}
 
-	args := minimist.ParseArgv(os.Args[1:])
+	args := minimist.ParseArgv(os.Args[2:])
 	command.handler(Args(args))
 
 	return prog
@@ -107,14 +114,14 @@ func (prog *Program) ShowHelp() *Program {
 	}
 
 	if prog.epilog != "" {
-		epilog = prog.epilog
+		epilog = "\n\n" + prog.epilog
 	}
 
 	for _, cmd := range prog.commands {
 		commands = append(commands, rpad(cmd.label, prog.padLength+4)+cmd.description)
 	}
 
-	output := header + "\n" + "Available Commands:\n    " + strings.Join(commands, "\n    ") + "\n\n" + epilog + "\n"
+	output := header + "\n" + "Available Commands:\n    " + strings.Join(commands, "\n    ") + epilog + "\n"
 	fmt.Print(output)
 
 	return prog
