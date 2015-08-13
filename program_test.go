@@ -8,16 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var name = "example"
-var description = "description"
-var version = "0.0.0"
-var epilog = "epilog"
-
 func ExampleProgram() {
 	prog := New()
-	prog.Description(name, description)
-	prog.Version(version)
-	prog.Epilog(epilog)
+	prog.Description("example", "description")
+	prog.Version("0.0.0")
+	prog.Epilog("epilog")
 	prog.Command("s", "start", "starts application", func(a Args) {})
 
 	prog.ShowHelp()

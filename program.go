@@ -1,3 +1,6 @@
+/*
+Package argparse keeps parsing command-line arguments simple!
+*/
 package argparse
 
 import (
@@ -13,7 +16,7 @@ type Program struct {
 	name        string
 	version     string
 	description string
-	commands    []Command
+	commands    []command
 	epilog      string
 	padLength   int
 }
@@ -41,7 +44,7 @@ func (prog *Program) Version(version string) *Program {
 
 // Command adds a new command
 func (prog *Program) Command(short, long, description string, handler func(Args)) *Program {
-	command := Command{
+	cmd := command{
 		short:       short,
 		long:        long,
 		handler:     handler,
@@ -52,13 +55,13 @@ func (prog *Program) Command(short, long, description string, handler func(Args)
 		label += short + ", "
 	}
 	label += long
-	command.label = label
+	cmd.label = label
 
 	if len(label) > prog.padLength {
 		prog.padLength = len(label)
 	}
 
-	prog.commands = append(prog.commands, command)
+	prog.commands = append(prog.commands, cmd)
 	return prog
 }
 
@@ -76,12 +79,12 @@ func (prog *Program) Parse() *Program {
 	}
 
 	var commandName = os.Args[1]
-	var command Command
+	var cmd command
 	var found = false
 
 	for _, v := range prog.commands {
 		if v.short == commandName || v.long == commandName {
-			command = v
+			cmd = v
 			found = true
 			break
 		}
@@ -94,7 +97,7 @@ func (prog *Program) Parse() *Program {
 	}
 
 	args := minimist.ParseArgv(os.Args[2:])
-	command.handler(Args(args))
+	cmd.handler(Args(args))
 
 	return prog
 }
